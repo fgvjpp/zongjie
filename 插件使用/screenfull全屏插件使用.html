@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .fullBox {
+            position: relative;
+        }
+        .isFull .all {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: red;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="fullscreenButton">点击切换全屏</button>
+    <div class="fullBox">
+        <div class="all">
+            全屏状态
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/screenfull@5.1.0/dist/screenfull.min.js"></script>
+    <script>
+        // 点击按钮
+        var fullscreenButton = document.getElementById('fullscreenButton');
+
+        // 全屏时顶层元素
+        const fullBox = document.querySelector('.fullBox')
+
+        // 按钮事件
+        fullscreenButton.addEventListener('click', function () {
+            fullBox.classList.add('isFull') // 给元素添加进入全屏时的自定义激活类
+            screenfull.request(document.querySelector('.fullBox')) // 全屏时top-layer显示的顶层元素
+        });
+
+        // 监听全屏状态的变化事件
+        screenfull.on('change', function () {
+            if (screenfull.isFullscreen) {
+                console.log('进入全屏模式');
+            } else {
+                console.log('退出全屏模式');
+                fullBox.classList.remove('isFull')
+            }
+        });
+
+
+
+        /**
+        *      NPM使用
+        *   1.npm install screenfull --save
+        *   2.import screenfull from 'screenfull' //导入
+        */
+    </script>
+</body>
+
+</html>
