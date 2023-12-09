@@ -3,23 +3,27 @@
 ##### test.js
 
 ```js
-defineStore创建的仓库有多少个 该函数就调用多少次
 
-export default (app) => {
+export default (currentStoreInstance) => {
+    // 1-2 每次调用该函数时currentStoreInstance获取到的是对应仓库的实例
     
-    const storeID = app.store.$id // 每次调用时获取到的仓库都是独立的实例
+    const storeID = currentStoreInstance.store.$id // 获取仓库中的id名称
     
+    // 数据持久化------Start
     const GET_DATA = JSON.parse(sessionStorage.getItem(storeID)) || {}
-    app.store.$patch(GET_DATA) // $patch方法可以给当前仓库实例覆盖state数据
+    // GET_DATA: Object
+    currentStoreInstance.store.$patch(GET_DATA) // $patch方法可以给当前仓库实例整个state对象数据覆盖掉
     
-    app.store.$subscribe((store, state) => { // $subscribe用来监听仓库状态数据变化
+    currentStoreInstance.store.$subscribe((store, state) => { 
+        // $subscribe用来监听仓库状态数据变化 数据发生改变就执行该函数
         console.log(state);
         sessionStorage.setItem(storeID, JSON.stringify(state))
     })
+    // 数据持久化------End
 
-    // app.options可以获取当前仓库对象defineStore中的自定义属性
-    if (app.options.myTest) {
-        console.log(app.options.myTest());
+    // currentStoreInstance.options可以获取当前仓库对象defineStore中的自定义属性
+    if (currentStoreInstance.options.myTest) {
+        console.log(currentStoreInstance.options.myTest());
     }
 }
 ```
@@ -32,6 +36,8 @@ export default (app) => {
 import test from './stores/plugins/test.js'
 
 const pinia = createPinia()
+
+// 1-1 如果在Pinia中使用 defineStore 创建了5个仓库，那么在调用 pinia.use(test) 时， test.js插件 会被调用5次
 pinia.use(test)
 ```
 
