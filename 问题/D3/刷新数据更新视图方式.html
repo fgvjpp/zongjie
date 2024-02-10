@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/d3/7.8.5/d3.min.js"></script>
+</head>
+
+<body>
+    <svg>
+    </svg>
+
+    <button id="btn">点击更新</button>
+    <script>
+        const data = [1, 2, 3, 4]
+        drawSvg(data)
+
+        btn.onclick = () => {
+            const newData = [11, 22, 33]
+            drawSvg(newData)
+        }
+
+        function drawSvg(data) {
+            // 1.选择svg元素
+            const svg = d3.select('svg')
+
+            // 2.绑定数据
+            const g = svg.selectAll('g').data(data)
+
+            // 3.更新已存在的元素
+            g.attr('x', v => v).attr("cy", 250)
+
+            // 4.绑定的data数据长度大于已存在的g元素时 多出来的data数据长度的那部分进行创建g元素
+            g.enter().append('g').attr('x', v => v)
+
+            // 5.绑定的data数据长度小于已存在的g元素时 多出来的g元素将会被移除
+            g.exit().remove()
+        }
+
+        // 总结
+        // .enter()和.exit()方法的前置使用条件是需要在.data绑定数据后才能使用
+    </script>
+</body>
+
+</html>
