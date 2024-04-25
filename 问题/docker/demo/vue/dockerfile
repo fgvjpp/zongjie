@@ -1,0 +1,13 @@
+# 基础 image
+FROM node:18.12.0
+
+# 设置项目目录
+WORKDIR /app
+
+# 安装项目依赖
+COPY package.json .
+RUN npm install
+
+# 运行
+CMD ["npm", "run", "dev"]
+
